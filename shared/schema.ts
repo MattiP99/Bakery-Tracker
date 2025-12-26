@@ -19,6 +19,7 @@ export const recipes = pgTable("recipes", {
   name: text("name").notNull(),
   description: text("description"),
   yieldAmount: integer("yield_amount").default(1),
+  servings: integer("servings").default(1), // Added for cost per serving
 });
 
 // Join table for Recipe Ingredients
@@ -37,6 +38,7 @@ export const inventoryItems = pgTable("inventory_items", {
   location: text("location").notNull(), // 'fridge', 'freezer', 'shelf'
   quantity: integer("quantity").notNull().default(0),
   unit: text("unit").notNull().default('pcs'),
+  servings: integer("servings").default(1), // Added for consistency if needed
 });
 
 // === RELATIONS ===

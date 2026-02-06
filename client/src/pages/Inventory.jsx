@@ -20,12 +20,10 @@ const formSchema = insertInventoryItemSchema.extend({
   quantity: z.coerce.number(),
 });
 
-type ItemFormValues = z.infer<typeof formSchema>;
-
-function InventoryItemForm({ onClose }: { onClose: () => void }) {
+function InventoryItemForm({ onClose }) {
   const createMutation = useCreateInventoryItem();
   
-  const form = useForm<ItemFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -36,7 +34,7 @@ function InventoryItemForm({ onClose }: { onClose: () => void }) {
     },
   });
 
-  function onSubmit(data: ItemFormValues) {
+  function onSubmit(data) {
     createMutation.mutate(data, {
       onSuccess: () => onClose(),
     });
@@ -183,7 +181,7 @@ export default function Inventory() {
     );
   }
 
-  const InventoryList = ({ items, icon: Icon }: { items: typeof filteredItems, icon: any }) => (
+  const InventoryList = ({ items, icon: Icon }) => (
     items.length === 0 ? (
       <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-border">
         <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 text-primary">

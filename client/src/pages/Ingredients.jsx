@@ -19,14 +19,12 @@ const formSchema = insertIngredientSchema.extend({
   stockAmount: z.coerce.number().min(0, "Stock cannot be negative"),
 });
 
-type IngredientFormValues = z.infer<typeof formSchema>;
-
-function IngredientForm({ onClose, initialData }: { onClose: () => void, initialData?: any }) {
+function IngredientForm({ onClose, initialData }) {
   const createMutation = useCreateIngredient();
   const updateMutation = useUpdateIngredient();
   const isEditing = !!initialData;
 
-  const form = useForm<IngredientFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
@@ -35,7 +33,7 @@ function IngredientForm({ onClose, initialData }: { onClose: () => void, initial
     },
   });
 
-  function onSubmit(data: IngredientFormValues) {
+  function onSubmit(data) {
     if (isEditing) {
       updateMutation.mutate({ id: initialData.id, ...data }, { onSuccess: onClose });
     } else {
@@ -117,14 +115,14 @@ export default function Ingredients() {
   const { data: ingredients, isLoading } = useIngredients();
   const deleteMutation = useDeleteIngredient();
   const [searchTerm, setSearchTerm] = useState("");
-  const [editingItem, setEditingItem] = useState<any>(null);
+  const [editingItem, setEditingItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredIngredients = ingredients?.filter(item => 
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item) => {
     setEditingItem(item);
     setIsDialogOpen(true);
   };

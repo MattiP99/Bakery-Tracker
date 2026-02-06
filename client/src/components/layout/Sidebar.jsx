@@ -1,7 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { 
-  LayoutDashboard, 
   Refrigerator, 
   ChefHat, 
   Scale, 

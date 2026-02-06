@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, buildUrl, type InventoryItem, type InsertInventoryItem } from "@shared/routes";
+import { api, buildUrl } from "@shared/routes";
 import { useToast } from "@/hooks/use-toast";
 
 export function useInventory() {
@@ -18,7 +18,7 @@ export function useCreateInventoryItem() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (data: InsertInventoryItem) => {
+    mutationFn: async (data) => {
       const res = await fetch(api.inventory.create.path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,7 +54,7 @@ export function useUpdateInventoryItem() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: number } & Partial<InsertInventoryItem>) => {
+    mutationFn: async ({ id, ...updates }) => {
       const url = buildUrl(api.inventory.update.path, { id });
       const res = await fetch(url, {
         method: "PUT",
@@ -81,7 +81,7 @@ export function useDeleteInventoryItem() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id) => {
       const url = buildUrl(api.inventory.delete.path, { id });
       const res = await fetch(url, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete item");

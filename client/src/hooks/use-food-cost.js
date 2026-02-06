@@ -2,12 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
   api, 
   buildUrl, 
-  type Ingredient, 
-  type InsertIngredient,
-  type RecipeWithIngredients,
-  type InsertRecipe,
-  type InsertRecipeIngredient
-} from "@shared/routes";
+  } from "@shared/routes";
 import { useToast } from "@/hooks/use-toast";
 
 // === INGREDIENTS ===
@@ -28,7 +23,7 @@ export function useCreateIngredient() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (data: InsertIngredient) => {
+    mutationFn: async (data) => {
       const res = await fetch(api.ingredients.create.path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,7 +45,7 @@ export function useUpdateIngredient() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: number } & Partial<InsertIngredient>) => {
+    mutationFn: async ({ id, ...updates }) => {
       const url = buildUrl(api.ingredients.update.path, { id });
       const res = await fetch(url, {
         method: "PUT",
@@ -73,7 +68,7 @@ export function useDeleteIngredient() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id) => {
       const url = buildUrl(api.ingredients.delete.path, { id });
       const res = await fetch(url, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete ingredient");
@@ -98,7 +93,7 @@ export function useRecipes() {
   });
 }
 
-export function useRecipe(id: number) {
+export function useRecipe(id) {
   return useQuery({
     queryKey: [api.recipes.get.path, id],
     queryFn: async () => {
@@ -117,7 +112,7 @@ export function useCreateRecipe() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (data: InsertRecipe) => {
+    mutationFn: async (data) => {
       const res = await fetch(api.recipes.create.path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,7 +134,7 @@ export function useDeleteRecipe() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id) => {
       const url = buildUrl(api.recipes.delete.path, { id });
       const res = await fetch(url, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete recipe");
@@ -158,7 +153,7 @@ export function useAddRecipeIngredient() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (data: InsertRecipeIngredient) => {
+    mutationFn: async (data) => {
       const res = await fetch(api.recipeIngredients.create.path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -181,7 +176,7 @@ export function useRemoveRecipeIngredient() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ id, recipeId }: { id: number, recipeId: number }) => {
+    mutationFn: async ({ id, recipeId }) => {
       const url = buildUrl(api.recipeIngredients.delete.path, { id });
       const res = await fetch(url, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to remove ingredient");

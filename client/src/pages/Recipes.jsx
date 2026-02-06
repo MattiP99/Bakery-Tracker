@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useRecipes, useCreateRecipe, useRecipe, useAddRecipeIngredient, useRemoveRecipeIngredient, useIngredients } from "@/hooks/use-food-cost";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Plus, ChefHat, Euro, Trash2, ChevronRight, ArrowRight } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Plus, ChefHat, Trash2, ChevronRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,7 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 // === RECIPE CREATION FORM ===
 const recipeSchema = insertRecipeSchema;
 
-function CreateRecipeForm({ onClose }: { onClose: () => void }) {
+function CreateRecipeForm({ onClose }) {
   const createMutation = useCreateRecipe();
   const form = useForm({
     resolver: zodResolver(recipeSchema),
@@ -69,7 +68,7 @@ function CreateRecipeForm({ onClose }: { onClose: () => void }) {
 }
 
 // === ADD INGREDIENT TO RECIPE FORM ===
-function AddIngredientForm({ recipeId, onClose }: { recipeId: number, onClose: () => void }) {
+function AddIngredientForm({ recipeId, onClose }) {
   const { data: ingredients } = useIngredients();
   const addMutation = useAddRecipeIngredient();
   
@@ -125,7 +124,7 @@ function AddIngredientForm({ recipeId, onClose }: { recipeId: number, onClose: (
 }
 
 // === RECIPE DETAIL VIEW ===
-function RecipeDetail({ id }: { id: number }) {
+function RecipeDetail({ id }) {
   const { data: recipe, isLoading } = useRecipe(id);
   const removeMutation = useRemoveRecipeIngredient();
   const [isAddingIngredient, setIsAddingIngredient] = useState(false);
@@ -140,14 +139,14 @@ function RecipeDetail({ id }: { id: number }) {
   const costPerServing = totalCostCents / (recipe.yieldAmount || 1);
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col min-h-[55vh]">
       <div className="p-6 border-b border-border bg-white/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
           <div>
             <h2 className="text-3xl font-display font-bold text-foreground mb-2">{recipe.name}</h2>
             <p className="text-sm text-muted-foreground max-w-md">{recipe.description || "No description provided."}</p>
           </div>
-          <div className="text-right">
+          <div className="sm:text-right">
             <p className="text-sm text-muted-foreground uppercase tracking-widest font-bold">Total Cost</p>
             <p className="text-3xl font-display font-bold text-primary">€ {(totalCostCents / 100).toFixed(2)}</p>
             <p className="text-sm text-muted-foreground mt-1">€ {(costPerServing / 100).toFixed(2)} per serving</p>
@@ -216,15 +215,15 @@ function RecipeDetail({ id }: { id: number }) {
 
 export default function Recipes() {
   const { data: recipes, isLoading } = useRecipes();
-  const [selectedRecipeId, setSelectedRecipeId] = useState<number | null>(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] flex font-sans overflow-hidden">
+    <div className="min-h-screen bg-[#FAFAF8] flex font-sans">
       <Sidebar />
-      <main className="flex-1 lg:ml-64 flex overflow-hidden h-screen">
+      <main className="flex-1 lg:ml-64 flex flex-col md:flex-row md:h-screen">
         {/* Left Panel: List */}
-        <div className="w-full md:w-1/3 lg:w-96 border-r border-border bg-white flex flex-col z-20 shadow-xl shadow-black/5">
+        <div className="w-full md:w-1/3 lg:w-96 md:border-r border-b md:border-b-0 border-border bg-white flex flex-col z-20 shadow-xl shadow-black/5 md:h-screen">
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between mb-2">
               <h2 className="font-display font-bold text-2xl">Recipes</h2>
@@ -276,7 +275,7 @@ export default function Recipes() {
         </div>
 
         {/* Right Panel: Details */}
-        <div className="flex-1 bg-secondary/10 relative">
+        <div className="flex-1 bg-secondary/10 relative min-h-[45vh] md:min-h-0">
           {selectedRecipeId ? (
             <RecipeDetail id={selectedRecipeId} />
           ) : (
